@@ -1,8 +1,8 @@
-package org.log.conntroller;
+package org.duid.controller;
 
 import lombok.extern.log4j.Log4j2;
-import org.log.model.DUIDResponse;
-import org.log.service.DUIDService;
+import org.duid.model.DUIDResponse;
+import org.duid.service.DUIDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

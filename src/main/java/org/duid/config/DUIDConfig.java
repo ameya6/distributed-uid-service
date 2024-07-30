@@ -1,4 +1,4 @@
-package org.log.config;
+package org.duid.config;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;

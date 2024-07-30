@@ -1,4 +1,4 @@
-package org.log;
+package org.duid;
 
 
 import lombok.extern.log4j.Log4j2;

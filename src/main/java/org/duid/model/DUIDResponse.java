@@ -1,4 +1,4 @@
-package org.log.model;
+package org.duid.model;
 
 import lombok.*;
 
