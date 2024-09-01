@@ -1,15 +1,19 @@
 package org.duid.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.duid.dao.DUIDDao;
+import org.duid.model.DUIDProcess;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log4j2
 public class DUIDService {
-
     private static final int UNUSED_BITS = 1;
     private static final int EPOCH_BITS = 41;
     private static final int SEQUENCE_BITS = 12;
@@ -21,6 +25,24 @@ public class DUIDService {
     private volatile long sequence = 0L;
     @Autowired
     public long nodeId;
+
+    @Autowired
+    private TimeScaleService timeScaleService;
+
+    public long generate() {
+        long startTime = System.nanoTime();
+        Long duid = nextId();
+        long endTime = System.nanoTime();
+        DUIDProcess duidProcess = DUIDProcess.builder()
+                .startTime(startTime)
+                .endTime(endTime)
+                .processTime((endTime - startTime) / 1000)
+                .time(LocalDateTime.now())
+                .duid(duid)
+                .build();
+        timeScaleService.save(duidProcess);
+        return duid;
+    }
 
     public synchronized long nextId() {
         long currentTimestamp = timestamp();

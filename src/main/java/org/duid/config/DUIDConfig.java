@@ -4,13 +4,17 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.net.NetworkInterface;
 import java.security.SecureRandom;
 import java.util.Enumeration;
+import java.util.concurrent.Executor;
 
 @Configuration
 @Log4j2
+@EnableAsync
 public class DUIDConfig {
 
     private static final int NODE_ID_BITS = 10;

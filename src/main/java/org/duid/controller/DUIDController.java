@@ -26,7 +26,7 @@ public class DUIDController {
 
     private DUIDResponse duidResponse() {
         DUIDResponse response = DUIDResponse.builder()
-                .duid(duidService.nextId())
+                .duid(duidService.generate())
                 .createdAt(LocalDateTime.now()).build();
         log.info("DUID : " + response.getDuid());
         return response;
