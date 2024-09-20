@@ -1,5 +1,5 @@
 server:
-  port: 10001
+  port: 10002
   servlet:
     context-path: /duid-service
 
@@ -7,6 +7,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  application:
+    name: duid-service
 
 datasource:
   driver: org.postgresql.Driver
@@ -16,4 +18,27 @@ datasource:
   max-pool-size: 40
   connection-test-query: "SELECT 1"
   pool-name: springHikariCP
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: duid-service
+  kafka:
+    producer:
+      bootstrap-servers: 192.168.0.206:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer #org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  servlet:
+    context-path: /duid-service
+  port: 10002
+
 

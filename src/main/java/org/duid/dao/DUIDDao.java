@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DUIDDao {
 
-    @Autowired
+    /*@Autowired
     private SessionFactory sessionFactory;
 
     public DUIDProcess save(DUIDProcess duidProcess) {
@@ -20,5 +20,5 @@ public class DUIDDao {
         s.flush();
         tr.commit();
         return duidProcess;
-    }
+    }*/
 }

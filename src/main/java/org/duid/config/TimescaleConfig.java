@@ -41,9 +41,7 @@ public class TimescaleConfig {
     private String poolName;
 
 
-
-
-    @Bean(name="entityManagerFactory")
+    /*@Bean(name="entityManagerFactory")
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
@@ -70,16 +68,9 @@ public class TimescaleConfig {
         return new HikariDataSource(hikariConfig);
     }
 
-    /*@Bean
-    public PlatformTransactionManager hibernateTransactionManager() {
-        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory().getObject());
-        return transactionManager;
-    }*/
-
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "none");
         return hibernateProperties;
-    }
+    }*/
 }

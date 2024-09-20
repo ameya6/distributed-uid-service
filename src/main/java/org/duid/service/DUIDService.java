@@ -1,5 +1,6 @@
 package org.duid.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
 import org.duid.dao.DUIDDao;
 import org.duid.model.DUIDProcess;
@@ -28,6 +29,11 @@ public class DUIDService {
 
     @Autowired
     private TimeScaleService timeScaleService;
+
+    @PostConstruct
+    private void init() {
+        log.info(toString());
+    }
 
     public long generate() {
         long startTime = System.nanoTime();

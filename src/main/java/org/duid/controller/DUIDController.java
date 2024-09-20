@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 
 @RestController
@@ -21,14 +23,23 @@ public class DUIDController {
 
     @GetMapping("/generate")
     public ResponseEntity<DUIDResponse> generate() {
-        return ResponseEntity.ok(duidResponse());
+        try {
+            return ResponseEntity.ok(duidResponse());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(errorResponse(e));
+        }
     }
 
-    private DUIDResponse duidResponse() {
+    private DUIDResponse duidResponse() throws UnknownHostException {
         DUIDResponse response = DUIDResponse.builder()
                 .duid(duidService.generate())
                 .createdAt(LocalDateTime.now()).build();
-        log.info("DUID : " + response.getDuid());
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        log.info("DUID : {}, machine ip address : {}, machine hostname : {}", response.getDuid(), inetAddress.getHostAddress(), inetAddress.getHostName());
         return response;
+    }
+
+    private DUIDResponse errorResponse(Exception e) {
+        return DUIDResponse.builder().message(e.getMessage()).build();
     }
 }

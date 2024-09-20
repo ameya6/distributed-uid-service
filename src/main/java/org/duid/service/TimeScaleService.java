@@ -19,8 +19,8 @@ public class TimeScaleService {
     @Async
     public void save(DUIDProcess duidProcess) {
         try {
-            CompletableFuture<DUIDProcess> timeScaleSave = CompletableFuture.completedFuture(duidDao.save(duidProcess));
-            CompletableFuture.allOf(timeScaleSave).join();
+            /*CompletableFuture<DUIDProcess> timeScaleSave = CompletableFuture.completedFuture(duidDao.save(duidProcess));
+            CompletableFuture.allOf(timeScaleSave).join()*/;
         } catch (Exception e) {
             log.error("Exception while saving to timescale: {}", e.getMessage(), e);
         }
