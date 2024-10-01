@@ -2,33 +2,35 @@ package org.duid.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
-import org.duid.dao.DUIDDao;
-import org.duid.model.DUIDProcess;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.time.model.ProcessTimeLogDTO;
+import org.time.model.TimeLog;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log4j2
 public class DUIDService {
-    private static final int UNUSED_BITS = 1;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     private static final int EPOCH_BITS = 41;
     private static final int SEQUENCE_BITS = 12;
-    private static final long maxSequence = (1L << SEQUENCE_BITS) - 1;
-    // Custom Epoch (January 1, 2015 Midnight UTC = 2015-01-01T00:00:00Z)
+    private static final long MAX_SEQUENCE = (1L << SEQUENCE_BITS) - 1;
     private static final long DEFAULT_CUSTOM_EPOCH = 1420070400000L;
     private static final int NODE_ID_BITS = 10;
     private volatile long lastTimestamp = -1L;
     private volatile long sequence = 0L;
+
     @Autowired
     public long nodeId;
 
     @Autowired
-    private TimeScaleService timeScaleService;
+    private TimeLogPublisher timeLogPublisher;
 
     @PostConstruct
     private void init() {
@@ -36,21 +38,29 @@ public class DUIDService {
     }
 
     public long generate() {
-        long startTime = System.nanoTime();
+        long startTimeNs = System.nanoTime();
+        LocalDateTime startTime = LocalDateTime.now();
         Long duid = nextId();
-        long endTime = System.nanoTime();
-        DUIDProcess duidProcess = DUIDProcess.builder()
-                .startTime(startTime)
-                .endTime(endTime)
-                .processTime((endTime - startTime) / 1000)
-                .time(LocalDateTime.now())
-                .duid(duid)
-                .build();
-        timeScaleService.save(duidProcess);
+        long endTimeNs = System.nanoTime();
+        LocalDateTime endTime = LocalDateTime.now();
+        timeLogPublisher.save(publishTimeLogEntry(TimeLog.of(startTimeNs, startTime, endTimeNs , endTime)));
         return duid;
     }
 
-    public synchronized long nextId() {
+    private ProcessTimeLogDTO publishTimeLogEntry(TimeLog timeLog) {
+        return ProcessTimeLogDTO.builder()
+                .startTimeNs(timeLog.startTimeNs())
+                .endTimeNs(timeLog.endTimeNs())
+                .processTime((double)(timeLog.endTimeNs() - timeLog.startTimeNs()) / 1_000_000)
+                .startTime(timeLog.startTime())
+                .endTime(timeLog.endTime())
+                .hostName(System.getProperty("hostName"))
+                .ipAddress(System.getProperty("hostAddress"))
+                .serviceName(applicationName)
+                .build();
+    }
+
+    private synchronized long nextId() {
         long currentTimestamp = timestamp();
 
         if(currentTimestamp < lastTimestamp) {
@@ -58,7 +68,7 @@ public class DUIDService {
         }
 
         if (currentTimestamp == lastTimestamp) {
-            sequence = (sequence + 1) & maxSequence;
+            sequence = (sequence + 1) & MAX_SEQUENCE;
             if(sequence == 0) {
                 currentTimestamp = waitNextMillis(currentTimestamp);
             }

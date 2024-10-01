@@ -3,7 +3,7 @@
     <Properties>
         <Property name="logPath">logs/elk-example/</Property>
         <Property name="rollingFileName">elk-example_app</Property>
-        <Property name="defaultPattern"> %d{ISO8601} %-5level ${spring:spring.application.name} %t %c{1}.%M().%L - %msg%n%throwable{short.lineNumber}</Property>
+        <Property name="defaultPattern"> %d{ISO8601} %-5level ${spring:spring.application.name} ${sys:hostName} ${sys:hostAddress} %t %c{1}.%M().%L - %msg%n%throwable{short.lineNumber}</Property>
         <Property name="logStashPattern">[%d{ISO8601}][%-5p][%-25c]%notEmpty{[%X{pipeline.id}]}%notEmpty{[%X{plugin.id}]} %m%n]</Property>
     </Properties>
     <Appenders>

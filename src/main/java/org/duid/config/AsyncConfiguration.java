@@ -1,6 +1,8 @@
 package org.duid.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -11,17 +13,20 @@ import java.util.concurrent.Executor;
 
 @Configuration
 @EnableAsync
+@Log4j2
 public class AsyncConfiguration  extends AsyncConfigurerSupport {
-    @Override
-    public Executor getAsyncExecutor() {
+    @Bean
+    public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(3);
+        executor.setCorePoolSize(4);
         executor.setMaxPoolSize(4);
-        executor.setThreadNamePrefix("asyn-task-thread-");
-        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("GithubLookup-");
         executor.initialize();
+        executor.setRejectedExecutionHandler((r, executor1) -> log.warn("Task rejected, thread pool is full and queue is also full"));
         return executor;
     }
+
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (ex, method, params) -> {

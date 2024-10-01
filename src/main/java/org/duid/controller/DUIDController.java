@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @Log4j2
@@ -30,12 +31,11 @@ public class DUIDController {
         }
     }
 
-    private DUIDResponse duidResponse() throws UnknownHostException {
+    private DUIDResponse duidResponse() throws UnknownHostException, ExecutionException, InterruptedException {
         DUIDResponse response = DUIDResponse.builder()
                 .duid(duidService.generate())
                 .createdAt(LocalDateTime.now()).build();
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        log.info("DUID : {}, machine ip address : {}, machine hostname : {}", response.getDuid(), inetAddress.getHostAddress(), inetAddress.getHostName());
+        log.info("DUID : {}", response.getDuid());
         return response;
     }
 

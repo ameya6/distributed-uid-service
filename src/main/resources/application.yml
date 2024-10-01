@@ -9,15 +9,24 @@ spring:
       enabled: true
   application:
     name: duid-service
+  kafka:
+    producer:
+      bootstrap-servers: 192.168.0.206:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-datasource:
-  driver: org.postgresql.Driver
-  url: jdbc:postgresql://192.168.0.206:5432/postgres
-  username: postgres
-  password: password
-  max-pool-size: 40
-  connection-test-query: "SELECT 1"
-  pool-name: springHikariCP
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 10012
+  security:
+    enabled: false
 
 ---
 
@@ -34,11 +43,24 @@ spring:
     producer:
       bootstrap-servers: 192.168.0.206:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer #org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 server:
   servlet:
     context-path: /duid-service
   port: 10002
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 10012
+  security:
+    enabled: false
 
 
