@@ -11,9 +11,9 @@ spring:
     name: duid-service
   kafka:
     producer:
-      bootstrap-servers: 192.168.0.206:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      bootstrap-servers: ${KAFKA.SERVER.ADDRESS}
+      key-serializer: ${KAFKA.KEY.STRING.SERIALIZER}
+      value-serializer: ${KAFKA.VALUE.STRING.SERIALIZER}
 
 management:
   endpoint:

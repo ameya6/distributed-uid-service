@@ -17,15 +17,15 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>-->
-        <!--<Socket name="socket" host="192.168.0.206" port="9999" reconnectionDelayMillis="5000">
+        <Socket name="socket" host="192.168.0.206" port="9999" reconnectionDelayMillis="5000">
             <PatternLayout pattern="${defaultPattern}" />
-        </Socket>-->
+        </Socket>
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="console" />
             <!--<AppenderRef ref="rollingFile"/>-->
-            <!--<AppenderRef ref="socket"/>-->
+            <AppenderRef ref="socket"/>
         </Root>
     </Loggers>
 </Configuration>
