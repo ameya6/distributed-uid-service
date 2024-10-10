@@ -17,7 +17,6 @@ import java.util.Enumeration;
 
 @Configuration
 @Log4j2
-@EnableAsync
 public class DUIDConfig {
 
     private static final int NODE_ID_BITS = 10;
