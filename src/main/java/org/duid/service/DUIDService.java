@@ -18,7 +18,6 @@ public class DUIDService {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    private static final int EPOCH_BITS = 41;
     private static final int SEQUENCE_BITS = 12;
     private static final long MAX_SEQUENCE = (1L << SEQUENCE_BITS) - 1;
     private static final long DEFAULT_CUSTOM_EPOCH = 1420070400000L;
@@ -98,7 +97,7 @@ public class DUIDService {
 
     @Override
     public String toString() {
-        return "Snowflake Settings [EPOCH_BITS=" + EPOCH_BITS + ", NODE_ID_BITS=" + NODE_ID_BITS
+        return "Snowflake Settings [NODE_ID_BITS=" + NODE_ID_BITS
                 + ", SEQUENCE_BITS=" + SEQUENCE_BITS + ", CUSTOM_EPOCH=" + DEFAULT_CUSTOM_EPOCH
                 + ", NodeId=" + nodeId + "]";
     }
